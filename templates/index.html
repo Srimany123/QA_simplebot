@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>MobileBERT Live QA</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    body { font-family: Arial; background-color: #f5f5f5; padding: 20px; }
+    #chatbox { background: #fff; border: 1px solid #ccc; height: 400px; overflow-y: scroll; padding: 10px; margin-bottom: 10px; }
+    #userInput { width: 75%; padding: 10px; }
+    #send { padding: 10px; }
+  </style>
+</head>
+<body>
+  <h2>Ask Me Anything About Pandas 🐼</h2>
+  <div id="chatbox"></div>
+  <input id="userInput" type="text" placeholder="Type your question here..." />
+  <button id="send">Send</button>
+
+  <script>
+    function appendMessage(sender, text) {
+      $("#chatbox").append("<p><strong>" + sender + ":</strong> " + text + "</p>");
+      $("#chatbox").scrollTop($("#chatbox")[0].scrollHeight);
+    }
+
+    $("#send").click(function() {
+      const userText = $("#userInput").val();
+      appendMessage("You", userText);
+      $.post("/get", { msg: userText }, function(data) {
+        appendMessage("Bot", data);
+      });
+      $("#userInput").val("");
+    });
+
+    $("#userInput").keypress(function(e) {
+      if (e.which === 13) {
+        $("#send").click();
+      }
+    });
+  </script>
+</body>
+</html>
